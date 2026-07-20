@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Results Rev</title>
+<style>
+  :root{
+    /* Placeholder palette — swap once logo/color palette is locked */
+    --ink: #16181C;
+    --ink-soft: #4A4E57;
+    --paper: #FFFFFF;
+    --paper-soft: #F5F5F4;
+    --line: #E3E3E0;
+    --accent: #1C3FFF; /* placeholder "momentum" blue — replace after logo */
+    --accent-soft: #EEF1FF;
+    --max: 1120px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:var(--max); margin:0 auto; padding: 0 24px;}
+
+  /* ---------- HEADER / NAV ---------- */
+  header{
+    position: sticky; top:0; z-index: 50;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    max-width: var(--max); margin:0 auto; padding: 18px 24px;
+  }
+  .logo{
+    font-size: 20px; font-weight: 800; letter-spacing: -0.02em;
+  }
+  .logo span{color: var(--accent);}
+  .nav-links{
+    display:flex; gap: 32px; align-items:center;
+    list-style:none; margin:0; padding:0;
+  }
+  .nav-links a{
+    font-size: 14px; font-weight: 600; color: var(--ink-soft);
+    padding: 6px 2px; border-bottom: 2px solid transparent;
+    transition: color .15s, border-color .15s;
+  }
+  .nav-links a:hover, .nav-links a.active{ color: var(--ink); border-color: var(--accent); }
+  .nav-cta{
+    background: var(--ink); color:#fff; font-size:14px; font-weight:700;
+    padding: 10px 18px; border-radius: 4px; white-space:nowrap;
+  }
+  .nav-cta:hover{background: var(--accent);}
+  .hamburger{ display:none; flex-direction:column; gap:5px; cursor:pointer; background:none; border:none; padding:6px; }
+  .hamburger span{ width:22px; height:2px; background: var(--ink); display:block; }
+
+  /* ---------- GENERIC SECTIONS ---------- */
+  section{ padding: 88px 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type{ border-bottom:none; }
+  .eyebrow{
+    font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 14px;
+  }
+  h1{ font-size: 52px; line-height: 1.05; letter-spacing:-0.02em; margin: 0 0 20px; font-weight: 800; }
+  h2{ font-size: 34px; line-height: 1.15; letter-spacing:-0.01em; margin: 0 0 16px; font-weight: 800; }
+  h3{ font-size: 19px; margin: 0 0 10px; font-weight: 700; }
+  p{ color: var(--ink-soft); margin: 0 0 16px; font-size: 16px; }
+  .lede{ font-size: 20px; max-width: 640px; }
+  .btn{
+    display:inline-block; font-weight: 700; font-size: 15px;
+    padding: 14px 26px; border-radius: 4px; margin-top: 8px;
+  }
+  .btn-primary{ background: var(--accent); color:#fff; }
+  .btn-primary:hover{ background:#1631CC; }
+  .btn-outline{ border: 1.5px solid var(--ink); color: var(--ink); }
+  .btn-outline:hover{ background: var(--ink); color:#fff; }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding-top: 100px; padding-bottom: 90px; }
+  .hero-grid{ display:grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items:center; }
+  .hero-stats{
+    display:grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line);
+    border: 1px solid var(--line); border-radius: 6px; overflow:hidden;
+  }
+  .stat{ background: var(--paper-soft); padding: 24px; display:flex; align-items:center; }
+  .stat b{ display:block; font-size: 28px; font-weight: 800; color: var(--ink); }
+  .stat span{ font-size: 13px; color: var(--ink-soft); }
+  .stat p.statement{ margin:0; font-size:15px; font-weight:700; color: var(--ink); line-height:1.35; }
+
+  /* ---------- 3-UP GRID ---------- */
+  .grid-3{ display:grid; grid-template-columns: repeat(3,1fr); gap: 32px; margin-top: 40px; }
+  .card{ border: 1px solid var(--line); border-radius: 8px; padding: 28px; background: var(--paper); }
+  .card .num{ font-size: 13px; font-weight: 800; color: var(--accent); margin-bottom: 12px; letter-spacing: 0.06em; }
+
+  .grid-2{ display:grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items:start; }
+
+  .band{ background: var(--paper-soft); }
+  .band-dark{ background: var(--ink); color:#fff; }
+  .band-dark p{ color: #C7CAD3; }
+  .band-dark h2{ color:#fff; }
+
+  .logos-row{
+    display:flex; flex-wrap:wrap; gap: 40px; align-items:center; margin-top: 32px;
+    padding-top: 32px; border-top: 1px solid var(--line);
+  }
+  .logos-row .ph{
+    font-size: 13px; font-weight:700; color: var(--ink-soft); letter-spacing: .04em;
+    border: 1px dashed var(--line); padding: 10px 16px; border-radius: 4px;
+  }
+
+  .quote{
+    border-left: 3px solid var(--accent); padding-left: 24px; margin: 32px 0;
+    font-size: 20px; font-weight: 600; color: var(--ink);
+  }
+  .quote cite{ display:block; font-size:14px; font-weight:500; color: var(--ink-soft); margin-top:10px; font-style:normal;}
+
+  .cta-band{ text-align:center; padding: 90px 0; }
+  .cta-band h2{ margin-bottom: 10px; }
+  .cta-band p{ max-width: 480px; margin-left:auto; margin-right:auto; }
+
+  .list-check{ list-style:none; margin:0; padding:0; }
+  .list-check li{ padding-left: 28px; position: relative; margin-bottom: 12px; color: var(--ink-soft); font-size:15px;}
+  .list-check li:before{ content:"—"; position:absolute; left:0; color: var(--accent); font-weight:800; }
+
+  table.compare{ width:100%; border-collapse: collapse; margin-top: 24px; }
+  table.compare th, table.compare td{ text-align:left; padding: 14px 16px; border-bottom:1px solid var(--line); font-size:14px; }
+  table.compare th{ color: var(--ink-soft); font-weight:700; text-transform:uppercase; font-size:12px; letter-spacing:.05em; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ background: var(--ink); color: #C7CAD3; padding: 56px 0 28px; }
+  .footer-grid{ display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 32px; margin-bottom: 40px; }
+  footer h4{ color:#fff; font-size:13px; text-transform:uppercase; letter-spacing:.06em; margin: 0 0 14px;}
+  footer ul{ list-style:none; margin:0; padding:0; }
+  footer li{ margin-bottom:10px; font-size:14px; }
+  footer a:hover{ color:#fff; }
+  .footer-bottom{ border-top:1px solid #2C2F36; padding-top: 22px; display:flex; justify-content:space-between; font-size:13px; color:#8A8E99; flex-wrap:wrap; gap:10px;}
+
+  /* ---------- PAGE VISIBILITY (pure CSS radio-driven router — no JS) ---------- */
+  .page-radio, .nav-toggle-input{ display:none; }
+  .page{ display:none; scroll-margin-top: 76px; }
+  #nav-home:checked ~ #home,
+  #nav-methodology:checked ~ #methodology,
+  #nav-partners:checked ~ #partners,
+  #nav-about:checked ~ #about,
+  #nav-contact:checked ~ #contact{ display:block; }
+
+  /* ---------- FORM (Contact) ---------- */
+  .form-field{ margin-bottom: 18px; }
+  .form-field label{ display:block; font-size: 13px; font-weight:700; margin-bottom:6px; }
+  .form-field input, .form-field select, .form-field textarea{
+    width:100%; padding: 12px 14px; border:1px solid var(--line); border-radius:4px;
+    font-size: 15px; font-family: inherit; color: var(--ink);
+  }
+  .form-field textarea{ min-height: 120px; resize: vertical; }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 860px){
+    h1{ font-size: 36px; }
+    h2{ font-size: 27px; }
+    .hero-grid, .grid-2{ grid-template-columns: 1fr; }
+    .grid-3{ grid-template-columns: 1fr; }
+    .footer-grid{ grid-template-columns: 1fr 1fr; }
+    .nav-links{
+      position:fixed; top:64px; left:0; right:0; bottom:0; background:#fff;
+      flex-direction:column; align-items:flex-start; padding: 24px; gap: 20px;
+      transform: translateX(100%); transition: transform .2s ease; overflow-y:auto;
+    }
+    .nav-links.open{ transform: translateX(0); }
+    #mobile-nav-toggle:checked ~ .nav-links{ transform: translateX(0); }
+    .nav-cta{ margin-top: 10px; }
+    .hamburger{ display:flex; }
+    section{ padding: 56px 0; }
+    .hero{ padding-top: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Page router: pure CSS radio-driven page switching, no JS required -->
+<input type="radio" name="page-nav" id="nav-home" class="page-radio" checked>
+<input type="radio" name="page-nav" id="nav-methodology" class="page-radio">
+<input type="radio" name="page-nav" id="nav-partners" class="page-radio">
+<input type="radio" name="page-nav" id="nav-about" class="page-radio">
+<input type="radio" name="page-nav" id="nav-contact" class="page-radio">
+
+<header>
+  <div class="nav">
+    <label for="nav-home" class="logo">RESULTS<span>REV</span></label>
+    <input type="checkbox" id="mobile-nav-toggle" class="nav-toggle-input">
+    <label for="mobile-nav-toggle" class="hamburger">
+      <span></span><span></span><span></span>
+    </label>
+    <ul class="nav-links">
+      <li><label for="nav-home">Home</label></li>
+      <li><label for="nav-methodology">Methodology</label></li>
+      <li><label for="nav-partners">For Partners</label></li>
+      <li><label for="nav-about">About</label></li>
+      <li><label for="nav-contact" class="nav-cta">Get Started</label></li>
+    </ul>
+  </div>
+</header>
+
+<!-- ============ HOME ============ -->
+<main id="home" class="page">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Partnership Performance</p>
+        <h1>Rev up what already works inside your partner program.</h1>
+        <p class="lede">Results Rev identifies the highest-performing plays inside your existing partnership program, then punches the accelerator to scale them systematically — using data, testing, and automation to compound what's already working.</p>
+        <label for="nav-contact" class="btn btn-primary">Get Started</label>
+        <label for="nav-methodology" class="btn btn-outline" style="margin-left:12px;">See the Methodology</label>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><p class="statement">100% focused on partnership channels</p></div>
+        <div class="stat"><p class="statement">Identify, lock in, and scale only what drives results</p></div>
+        <div class="stat"><p class="statement">Our technology dovetails with your existing stack</p></div>
+        <div class="stat"><p class="statement">Speed and transparency fuel customer acquisition</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">The Problem</p>
+      <h2>Most partnership programs leave upside on the table.</h2>
+      <p class="lede">Partners join with good intentions and then plateau — not from a bad program, but from lack of bandwidth to systematically find and scale what's working. That's the gap we close.</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="num">01</div>
+          <h3>Signal gets lost</h3>
+          <p>The plays that convert best are buried inside broader activity with no system built to isolate them.</p>
+        </div>
+        <div class="card">
+          <div class="num">02</div>
+          <h3>Testing stalls</h3>
+          <p>Without dedicated resourcing, most partners run one approach and stick with it — win or lose.</p>
+        </div>
+        <div class="card">
+          <div class="num">03</div>
+          <h3>Scaling slows</h3>
+          <p>What works for ten leads a month rarely gets rebuilt to work for a hundred.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap grid-2">
+      <div>
+        <p class="eyebrow">Our Solution</p>
+        <h2>Identify. Test. Scale.</h2>
+        <p>We plug into your partnership program, find the highest-leverage plays already producing results, and build a systematic, often AI-assisted, process to repeat them at volume.</p>
+        <label for="nav-methodology" class="btn btn-outline">See the Methodology</label>
+      </div>
+      <ul class="list-check">
+        <li>We start inside your program as a true partner, not a vendor</li>
+        <li>We identify the specific plays currently working</li>
+        <li>We test variations systematically, not by instinct</li>
+        <li>We only automate to scale what is proven</li>
+        <li>We report back in your terms: revenue, conversion, hours saved</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">Who We Help</p>
+      <h2>Built for partnership and channel teams looking to rev results.</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Partner Program Owners</h3>
+          <p>You run a partner program and want more consistent output from participants.</p>
+        </div>
+        <div class="card">
+          <h3>Partners &amp; Resellers</h3>
+          <p>Within the program, you need to know exactly which of your own activities to double down on.</p>
+        </div>
+        <div class="card">
+          <h3>Growth &amp; Ops Leaders</h3>
+          <p>You'd like to systemize what's working across partnerships without adding headcount.</p>
+        </div>
+      </div>
+      <div class="logos-row">
+        <span class="ph">[ Partner Logo ]</span>
+        <span class="ph">[ Partner Logo ]</span>
+        <span class="ph">[ Partner Logo ]</span>
+        <span class="ph">[ Partner Logo ]</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="band-dark cta-band">
+    <div class="wrap">
+      <h2>Ready to rev up your program?</h2>
+      <p>No pitch, no deck required.</p>
+      <label for="nav-contact" class="btn btn-primary">Get Started</label>
+    </div>
+  </section>
+</main>
+
+<!-- ============ METHODOLOGY ============ -->
+<main id="methodology" class="page">
+  <section class="hero" style="padding-bottom:40px;">
+    <div class="wrap">
+      <p class="eyebrow">Our Methodology</p>
+      <h1>A systematic way to find and scale what works.</h1>
+      <p class="lede">This is the framework behind every engagement — three disciplines, applied in order, inside your existing partner program.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid-2" style="margin-bottom:56px;">
+        <div>
+          <h3>Identify</h3>
+          <p>We map every active channel, offer, and outreach approach inside your program, then isolate which specific plays are actually converting — separating signal from activity.</p>
+        </div>
+        <div>
+          <p class="eyebrow" style="margin-bottom:6px;">What this looks like</p>
+          <ul class="list-check">
+            <li>Full audit of current partner activity and results</li>
+            <li>Ranking of plays by revenue and time efficiency</li>
+            <li>A short list of what's actually worth scaling</li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-bottom:56px;">
+        <div>
+          <h3>Test</h3>
+          <p>Rather than assume a play will keep working, we run structured variations — offer, timing, audience, channel — to confirm what holds up and what was a one-off.</p>
+        </div>
+        <div>
+          <p class="eyebrow" style="margin-bottom:6px;">What this looks like</p>
+          <ul class="list-check">
+            <li>Controlled testing across a small number of variables at a time</li>
+            <li>Clear before/after comparison, not guesswork</li>
+            <li>A validated playbook, not a hunch</li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <h3>Scale</h3>
+          <p>Once a play is validated, we build the systems — including automation where it makes sense — to repeat it at volume, without requiring more manual hours.</p>
+        </div>
+        <div>
+          <p class="eyebrow" style="margin-bottom:6px;">What this looks like</p>
+          <ul class="list-check">
+            <li>Automation applied only where it removes real manual work</li>
+            <li>Systems documented so your team can run them independently</li>
+            <li>Ongoing monitoring to catch when performance shifts</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <p class="eyebrow">Where AI Fits</p>
+      <h2>AI is how we scale. It's not what we sell.</h2>
+      <p class="lede">We use AI-driven tools to test faster and scale proven plays without adding headcount. The judgment — what's worth testing, what's worth scaling — stays human. Partners don't need to know or care what tool is running in the background; they care about the results it produces.</p>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <h2>See how this applies to your program.</h2>
+      <label for="nav-contact" class="btn btn-primary">Get Started</label>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOR PARTNERS ============ -->
+<main id="partners" class="page">
+  <section class="hero" style="padding-bottom:40px;">
+    <div class="wrap">
+      <p class="eyebrow">For Partners</p>
+      <h1>We join your program as a partner — then make it perform.</h1>
+      <p class="lede">Results Rev operates inside partnership and affiliate programs directly. We're not an agency retooling your tech stack — we're a partner focused entirely on generating and scaling results within your program's existing rules.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid-2">
+      <div>
+        <p class="eyebrow">What We Deliver</p>
+        <h2>Results, reported in your terms.</h2>
+        <p>Every engagement is measured against the metrics your program already tracks — leads, conversions, revenue, retention. No new dashboards to learn, no new systems to adopt.</p>
+      </div>
+      <ul class="list-check">
+        <li>Consistent, testable lead flow inside your program</li>
+        <li>Transparent reporting on what's working and why</li>
+        <li>No disruption to your existing program structure or tech stack</li>
+        <li>A partner that scales with you, not a vendor selling you tools</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <p class="eyebrow">What We're Not</p>
+      <h2>Clear on scope, on purpose.</h2>
+      <table class="compare">
+        <tr><th>Full-service agencies</th><th>Results Rev</th></tr>
+        <tr><td>Build and manage your entire program</td><td>Work inside the program you already run</td></tr>
+        <tr><td>Sell you new software or platforms</td><td>Use our own tools to drive results — nothing to install</td></tr>
+        <tr><td>Handle recruitment, payments, compliance</td><td>Focused entirely on performance and scale</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">Program Fit</p>
+      <h2>Best fit for programs that already have some traction.</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Established Programs</h3>
+          <p>You have a working partner or affiliate structure and want more consistent output from it.</p>
+        </div>
+        <div class="card">
+          <h3>Clear Compensation Model</h3>
+          <p>Commission, rev share, or flat-fee structures that are already defined and predictable.</p>
+        </div>
+        <div class="card">
+          <h3>Room to Test</h3>
+          <p>A willingness to let us test variations on outreach and offer within program guidelines.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band band-dark">
+    <div class="wrap">
+      <h2>Let's see if there's a fit.</h2>
+      <p>A short call tells us both whether your program is a good match.</p>
+      <label for="nav-contact" class="btn btn-primary">Get Started</label>
+    </div>
+  </section>
+</main>
+
+<!-- ============ ABOUT ============ -->
+<main id="about" class="page">
+  <section class="hero" style="padding-bottom:40px;">
+    <div class="wrap">
+      <p class="eyebrow">About</p>
+      <h1>Built to find what works — and prove it.</h1>
+      <p class="lede">Results Rev was founded on a simple observation: most partnership programs already contain the plays that would scale them. The missing piece isn't more activity — it's a systematic way to find, test, and repeat what's already working.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid-2">
+      <div>
+        <p class="eyebrow">Founder Background</p>
+        <h2>[Founder Name]</h2>
+        <p>[Placeholder — insert founder bio: relevant business/technology background, prior experience with partnerships, sales, or automation, and why this problem specifically. Keep it concrete and outcome-focused, 2–3 short paragraphs.]</p>
+      </div>
+      <div class="quote">
+        “We're not asking partner programs to change how they work. We're finding what's already working inside them — and giving it room to scale.”
+        <cite>— [Founder Name], Founder</cite>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <p class="eyebrow">Where We Are Today</p>
+      <h2>Early, deliberate, and transparent about it.</h2>
+      <p class="lede">Results Rev is a new company built around a proven methodology, not a decade of case studies. We're direct about that — and confident it's an advantage: every engagement gets founder-level attention and a genuinely custom approach, not a templated playbook stretched across hundreds of accounts.</p>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <h2>Talk to the founder directly.</h2>
+      <label for="nav-contact" class="btn btn-primary">Get Started</label>
+    </div>
+  </section>
+</main>
+
+<!-- ============ CONTACT ============ -->
+<main id="contact" class="page">
+  <section class="hero" style="padding-bottom:40px;">
+    <div class="wrap">
+      <p class="eyebrow">Contact</p>
+      <h1>Let's get this started.</h1>
+      <p class="lede">Tell us about your program so we can hit the ground running. No pitch, no deck — just a straight read on whether we're a fit.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid-2">
+      <div>
+        <div class="form-field">
+          <label>Name</label>
+          <input type="text" placeholder="Your full name">
+        </div>
+        <div class="form-field">
+          <label>Work Email</label>
+          <input type="email" placeholder="you@company.com">
+        </div>
+        <div class="form-field">
+          <label>Company</label>
+          <input type="text" placeholder="Company name">
+        </div>
+        <div class="form-field">
+          <label>Partner Program(s) You're Part Of</label>
+          <input type="text" placeholder="e.g. HelpSquad, Semantic Labs">
+        </div>
+        <div class="form-field">
+          <label>What are you hoping to improve?</label>
+          <textarea placeholder="A sentence or two is plenty."></textarea>
+        </div>
+        <button type="button" class="btn btn-primary">Get Started</button>
+      </div>
+      <div>
+        <h3>Prefer email?</h3>
+        <p>[hello@resultsrev.com]</p>
+        <h3 style="margin-top:32px;">What to expect</h3>
+        <ul class="list-check">
+          <li>Reply within one business day</li>
+          <li>30-minute call, no obligation</li>
+          <li>Honest read on fit — including if it's a no</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="color:#fff;">RESULTS<span>REV</span></div>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><label for="nav-home">Home</label></li>
+          <li><label for="nav-methodology">Methodology</label></li>
+          <li><label for="nav-partners">For Partners</label></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><label for="nav-about">About</label></li>
+          <li><label for="nav-contact">Contact</label></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Get Started</h4>
+        <ul>
+          <li><label for="nav-contact">Get Started</label></li>
+          <li><a href="mailto:hello@resultsrev.com">hello@resultsrev.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Results Rev. All rights reserved.</span>
+      <span>Structure mockup — copy &amp; layout draft, pre-design pass</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
